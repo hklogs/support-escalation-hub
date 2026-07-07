@@ -1,0 +1,6 @@
+{
+  "name": "Support Escalation Hub",
+  "description": "An elite AI-powered customer support workspace that autonomously resolves Tier 1 and Tier 2 tickets, and generates precise, contextual Tier 3 handover summaries for human engineers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
