@@ -1,9 +1,10 @@
 import { useAppState } from '../../store/index';
 import { NavTab } from '../../types/index';
-import { Inbox, Ticket, BookOpen, Terminal, Settings, Activity } from 'lucide-react';
+import { Inbox, Ticket, BookOpen, Terminal, Settings, Activity, FolderCode } from 'lucide-react';
 
 const NAV_ITEMS: { id: NavTab; label: string; icon: typeof Inbox }[] = [
   { id: 'inbox', label: 'Dashboard', icon: Activity },
+  { id: 'project', label: 'Project Analyzer', icon: FolderCode },
   { id: 'queue', label: 'Active Queue', icon: Ticket },
   { id: 'kedb', label: 'KEDB Library', icon: BookOpen },
   { id: 'ingress', label: 'Ingress Stream', icon: Terminal },

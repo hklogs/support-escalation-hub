@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAppState } from '../../store/index';
-import { Key, Database, RefreshCw, Check, Shield, Activity, XCircle, AlertTriangle, Sparkles, ArrowRight, Loader } from 'lucide-react';
+import { Key, Database, RefreshCw, Check, Shield, Activity, XCircle, AlertTriangle, Sparkles, ArrowRight, Loader, FolderCode } from 'lucide-react';
 
 interface MissingCred {
   service: string;
@@ -318,9 +318,31 @@ export default function SetupScreen() {
               )}
             </button>
 
+            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
+              <button
+                type="button"
+                onClick={() => {
+                  dispatch({ type: 'SET_ONBOARDING_DONE' });
+                  dispatch({ type: 'SET_NAV', payload: 'project' });
+                }}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs py-2.5 px-3 rounded-xl font-medium flex items-center justify-center gap-1.5 shadow transition-all hover:-translate-y-0.5"
+              >
+                <FolderCode size={14} />
+                <span>Upload Project</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => dispatch({ type: 'SET_ONBOARDING_DONE' })}
+                className="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs py-2.5 px-3 rounded-xl font-medium flex items-center justify-center gap-1.5 border border-slate-700 transition-all hover:-translate-y-0.5"
+              >
+                <ArrowRight size={14} />
+                <span>Quick Start Mode</span>
+              </button>
+            </div>
+
             {hasAnyFailed && (
               <p className="text-[10px] text-slate-500 text-center">
-                Fix the errors above and retry, or re-enter your credentials to test again.
+                Fix the errors above and retry, or use Upload Project / Quick Start Mode to test offline.
               </p>
             )}
           </div>
@@ -333,3 +355,4 @@ export default function SetupScreen() {
     </div>
   );
 }
+

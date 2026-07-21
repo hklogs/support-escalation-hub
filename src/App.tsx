@@ -10,6 +10,7 @@ import TicketDetail from './components/Workspace/TicketDetail';
 import KEDBLibrary from './components/KEDB/KEDBLibrary';
 import IngressStream from './components/Ingress/IngressStream';
 import SettingsPanel from './components/Settings/SettingsPanel';
+import ProjectAnalyzer from './components/Project/ProjectAnalyzer';
 import SetupScreen from './components/Onboarding/SetupScreen';
 import { Plus, X, Ticket as TicketIcon, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -68,6 +69,8 @@ function AppContent() {
     switch (state.activeNav) {
       case 'inbox':
         return <Inbox />;
+      case 'project':
+        return <ProjectAnalyzer />;
       case 'queue':
         return (
           <div className="flex-1 flex overflow-hidden">
