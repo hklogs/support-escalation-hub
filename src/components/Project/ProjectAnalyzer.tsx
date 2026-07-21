@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useAppState } from '../../store/index';
 import { ProjectFile, ProjectAnalysisResult } from '../../types/index';
+import Cinematic3DCanvas from './Cinematic3DCanvas';
 import { 
   FolderCode, Upload, FileText, Terminal, ShieldAlert, CheckCircle, 
-  AlertTriangle, Cpu, Sparkles, Code2, Play, BookOpen, Layers, Zap, ArrowRight, RefreshCw, Check, Wrench, FileDiff
+  AlertTriangle, Cpu, Sparkles, Code2, Play, BookOpen, Layers, Zap, ArrowRight, RefreshCw, Check, Wrench, FileDiff, Scan, Flame
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -130,11 +131,11 @@ export default function ProjectAnalyzer() {
     setIsAnalyzing(true);
     setResult(null);
     setFixResult(null);
-    setAnalysisProgress(['[0.00s] INITIALIZING_TERMINAL_INSPECTION_AGENT...']);
+    setAnalysisProgress(['[0.00s] INITIALIZING_3D_TERMINAL_INSPECTION_MATRIX...']);
 
     const steps = [
       '[0.35s] READING_PROJECT_TREE_AND_DEPENDENCY_MANIFESTS...',
-      '[0.85s] PARSING_ABSTRACT_SYNTAX_TREES_&_ENTRY_POINTS...',
+      '[0.85s] PARSING_ABSTRACT_SYNTAX_TREES_&_CROSS_FILE_SYMBOLS...',
       '[1.40s] DISPATCHING_FILES_TO_GEMINI_2_0_ANALYSIS_BACKEND...',
       '[2.10s] EXECUTING_SECURITY_VULNERABILITY_&_DEFECT_TRIAGE...',
       '[2.75s] SYNTHESIZING_DIAGNOSTIC_REPORTS_AND_REMEDIATION_PLAN...'
@@ -159,7 +160,7 @@ export default function ProjectAnalyzer() {
       if (res.ok) {
         const data: ProjectAnalysisResult = await res.json();
         setResult(data);
-        setAnalysisProgress(prev => [...prev, '[COMPLETED] Codebase Diagnosis Finished! Triage report generated.']);
+        setAnalysisProgress(prev => [...prev, '[COMPLETED] Codebase 3D Diagnosis Finished! Triage report generated.']);
         dispatch({ type: 'SHOW_TOAST', payload: 'Codebase Diagnosis complete!' });
       } else {
         throw new Error('Analysis failed');
@@ -197,7 +198,6 @@ export default function ProjectAnalyzer() {
         const data: FixResponse = await res.json();
         setFixResult(data);
 
-        // Update local files in state with fixed files
         setFiles(prevFiles => {
           const updated = [...prevFiles];
           data.fixedFiles.forEach(fixed => {
@@ -232,31 +232,44 @@ export default function ProjectAnalyzer() {
   };
 
   return (
-    <div className="flex-1 bg-slate-950 text-slate-100 p-6 overflow-y-auto space-y-6 font-sans">
-      {/* Sleek Minimalist Terminal Header */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 backdrop-blur-md">
-        <div className="space-y-1.5">
+    <div className="relative flex-1 bg-slate-950 text-slate-100 p-6 overflow-y-auto space-y-6 font-sans cyber-grid-bg">
+      {/* 3D Interactive Background Particle Canvas */}
+      <Cinematic3DCanvas isAnalyzing={isAnalyzing} isFixing={isFixing} />
+
+      {/* Futuristic Holographic Hero Header */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 bg-slate-900/80 backdrop-blur-xl border border-indigo-500/30 rounded-2xl p-6 shadow-[0_0_50px_rgba(99,102,241,0.12)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 overflow-hidden"
+      >
+        {/* Holographic Laser Scanner Line during active scan */}
+        {(isAnalyzing || isFixing) && (
+          <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent animate-scanline z-20 shadow-[0_0_15px_#10b981]" />
+        )}
+
+        <div className="space-y-1.5 z-10">
           <div className="flex items-center space-x-2">
-            <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1">
-              <Sparkles size={11} /> Gemini AI Code Inspector & Auto-Fixer
+            <span className="bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 text-[10px] font-mono px-3 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+              <Sparkles size={11} className="text-indigo-400 animate-pulse" /> Gemini 2.0 Flash AI Core
             </span>
-            <span className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold">
-              Autonomous Terminal Engine
+            <span className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono px-3 py-0.5 rounded-full font-bold shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+              3D Holographic Matrix
             </span>
           </div>
-          <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-            <FolderCode className="text-emerald-400" size={24} />
+          <h2 className="text-2xl font-black text-white tracking-tight flex items-center gap-3 bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+            <FolderCode className="text-indigo-400 shrink-0" size={26} />
             {projectName}
           </h2>
-          <p className="text-xs text-slate-400 max-w-xl">
-            Upload any project folder or source code to automatically diagnose bugs, security vulnerabilities, and execute live code fixes in the backend.
+          <p className="text-xs text-slate-400 max-w-xl leading-relaxed">
+            Drop your local repository or select files to trigger autonomous 3D code inspection, security vulnerability triage, and live terminal auto-fixing.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0">
-          <label className="cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shadow">
-            <Upload size={14} className="text-emerald-400" />
-            <span>Select Project Folder</span>
+        <div className="flex items-center gap-3 shrink-0 z-10">
+          <label className="cursor-pointer bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border border-slate-700/80 hover:border-indigo-500/50 px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg backdrop-blur-md">
+            <Upload size={14} className="text-indigo-400" />
+            <span>Select Local Project</span>
             <input 
               type="file" 
               multiple 
@@ -271,28 +284,33 @@ export default function ProjectAnalyzer() {
           <button
             onClick={runDeepAnalysis}
             disabled={isAnalyzing || files.length === 0}
-            className="bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-lg shadow-emerald-600/20 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 disabled:hover:translate-y-0"
+            className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:from-slate-800 disabled:to-slate-800 text-white px-5 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-2 shadow-[0_0_25px_rgba(99,102,241,0.4)] transition-all duration-300 hover:scale-105 active:scale-95 disabled:hover:scale-100"
           >
             {isAnalyzing ? (
-              <><RefreshCw size={14} className="animate-spin" /> Inspecting Files...</>
+              <><RefreshCw size={14} className="animate-spin text-white" /> Scanning Codebase...</>
             ) : (
-              <><Play size={14} /> Diagnose Project</>
+              <><Play size={14} className="fill-current" /> Execute 3D Diagnosis</>
             )}
           </button>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Main Grid: Code Explorer & Syntax View */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Main Grid: Code Explorer & 3D Tilt Syntax View */}
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* File List */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex flex-col h-[360px] shadow-lg">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 flex flex-col h-[380px] shadow-2xl glow-card-indigo"
+        >
+          <div className="flex items-center justify-between border-b border-slate-800/80 pb-3 mb-3">
             <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-              <Layers size={14} className="text-emerald-400" /> Source Code Files ({files.length})
+              <Layers size={14} className="text-indigo-400" /> Source Code Files ({files.length})
             </h3>
             <button 
               onClick={() => { setFiles(CURRENT_PROJECT_PRESET); setSelectedFile(CURRENT_PROJECT_PRESET[0]); setProjectName('Support Escalation Hub'); }}
-              className="text-[10px] text-slate-400 hover:text-white bg-slate-800 px-2 py-1 rounded border border-slate-700 transition-colors"
+              className="text-[10px] text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700 px-2.5 py-1 rounded-lg border border-slate-700 transition-all font-mono"
             >
               Preset Project
             </button>
@@ -302,85 +320,97 @@ export default function ProjectAnalyzer() {
               <button
                 key={idx}
                 onClick={() => setSelectedFile(f)}
-                className={`w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between transition-colors ${
+                className={`w-full text-left px-3 py-2 rounded-xl flex items-center justify-between transition-all duration-200 ${
                   selectedFile?.path === f.path
-                    ? 'bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 font-semibold'
+                    ? 'bg-gradient-to-r from-indigo-600/30 to-purple-600/20 text-indigo-200 border border-indigo-500/40 font-semibold shadow-[0_0_15px_rgba(99,102,241,0.2)]'
                     : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
                 }`}
               >
-                <span className="truncate flex items-center gap-1.5">
-                  <FileText size={12} className={selectedFile?.path === f.path ? 'text-emerald-400' : 'text-slate-500'} />
+                <span className="truncate flex items-center gap-2">
+                  <FileText size={13} className={selectedFile?.path === f.path ? 'text-indigo-400' : 'text-slate-500'} />
                   {f.path}
                 </span>
-                <span className="text-[9px] text-slate-600 shrink-0 font-mono">
+                <span className="text-[9px] text-slate-500 shrink-0 font-mono">
                   {f.content ? `${f.content.split('\n').length} L` : ''}
                 </span>
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Code Editor Preview */}
-        <div className="lg:col-span-2 bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex flex-col h-[360px] shadow-lg">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+        {/* 3D Code View Window */}
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="lg:col-span-2 bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 flex flex-col h-[380px] shadow-2xl relative overflow-hidden glow-card-indigo"
+        >
+          <div className="flex items-center justify-between border-b border-slate-800/80 pb-3 mb-3">
             <div className="flex items-center space-x-2">
-              <Code2 size={15} className="text-emerald-400" />
+              <Code2 size={16} className="text-indigo-400" />
               <span className="font-mono text-xs font-bold text-slate-200">{selectedFile?.path || 'No file selected'}</span>
             </div>
-            <span className="text-[10px] font-mono text-slate-500">LIVE_CODE_VIEW</span>
+            <span className="text-[10px] font-mono text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">LIVE_SYNTAX_VIEW</span>
           </div>
-          <pre className="flex-1 overflow-auto font-mono text-[11px] text-slate-300 bg-slate-950 p-4 rounded-lg border border-slate-800/80 leading-relaxed whitespace-pre-wrap">
+          <pre className="flex-1 overflow-auto font-mono text-[11px] text-slate-300 bg-slate-950/90 p-4 rounded-xl border border-slate-800/80 leading-relaxed whitespace-pre-wrap selection:bg-indigo-500 selection:text-white">
             {selectedFile?.content || '// Select a file from the explorer to preview source code...'}
           </pre>
-        </div>
+        </motion.div>
       </div>
 
       {/* Terminal Stream Execution Window */}
       {analysisProgress.length > 0 && (
-        <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 shadow-xl space-y-2 font-mono text-[11px]">
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative z-10 bg-slate-950/90 backdrop-blur-xl border border-slate-800 rounded-2xl p-4 shadow-2xl space-y-2 font-mono text-[11px] glow-card-emerald"
+        >
           <div className="flex items-center justify-between border-b border-slate-800/80 pb-2 mb-2 text-slate-400">
             <span className="flex items-center gap-2 font-bold uppercase tracking-wider text-[10px]">
-              <Terminal size={14} className="text-emerald-400" /> Backend Terminal Execution Stream
+              <Terminal size={14} className="text-emerald-400" /> Terminal Execution Log
             </span>
-            <span className="text-[9px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">AGENT_ONLINE</span>
+            <span className="text-[9px] text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 font-bold">
+              TERMINAL_ACTIVE
+            </span>
           </div>
-          <div className="space-y-1 max-h-36 overflow-y-auto pr-2">
+          <div className="space-y-1 max-h-36 overflow-y-auto pr-2 leading-relaxed">
             {analysisProgress.map((line, i) => (
               <div key={i} className={line.includes('COMPLETED') || line.includes('REPAIR_COMPLETE') ? 'text-emerald-400 font-bold' : line.includes('REPAIR') ? 'text-indigo-400 font-semibold' : line.includes('WARNING') ? 'text-amber-400' : 'text-slate-400'}>
                 {line}
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Fix Results Banner */}
       <AnimatePresence>
         {fixResult && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-gradient-to-r from-emerald-950/80 to-slate-900 border border-emerald-500/30 rounded-xl p-5 shadow-xl space-y-3"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            className="relative z-10 bg-gradient-to-r from-emerald-950/90 via-slate-900 to-indigo-950/90 backdrop-blur-xl border border-emerald-500/40 rounded-2xl p-5 shadow-[0_0_40px_rgba(16,185,129,0.15)] space-y-3"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
-                <CheckCircle size={16} /> Terminal Repair Applied Successfully
+              <h3 className="text-xs font-extrabold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                <CheckCircle size={16} /> Backend Terminal Repair Applied
               </h3>
-              <span className="text-[10px] font-mono text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
-                Status: {fixResult.remediationStatus}
+              <span className="text-[10px] font-mono text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">
+                {fixResult.remediationStatus}
               </span>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/80 p-3 rounded-lg border border-slate-800">
+            <p className="text-xs text-slate-200 leading-relaxed bg-slate-950/80 p-3.5 rounded-xl border border-slate-800">
               {fixResult.summaryOfFixes}
             </p>
 
             <div className="space-y-2 pt-1">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                <FileDiff size={12} /> Modified Code Patches ({fixResult.fixedFiles.length} files)
+                <FileDiff size={12} className="text-emerald-400" /> Applied Code Patches ({fixResult.fixedFiles.length} files)
               </span>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {fixResult.fixedFiles.map((fixed, i) => (
-                  <div key={i} className="bg-slate-950 p-3 rounded-lg border border-slate-800/80 font-mono text-[10px] space-y-1">
+                  <div key={i} className="bg-slate-950/90 p-3.5 rounded-xl border border-slate-800 font-mono text-[10px] space-y-1">
                     <span className="text-emerald-400 font-bold">{fixed.path}</span>
                     <p className="text-slate-400">{fixed.diffSummary}</p>
                   </div>
@@ -395,45 +425,45 @@ export default function ProjectAnalyzer() {
       <AnimatePresence>
         {result && (
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 15 }}
-            className="space-y-6"
+            exit={{ opacity: 0, y: 20 }}
+            className="relative z-10 space-y-6"
           >
             {/* Action Bar: Auto-Fix All */}
-            <div className="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex items-center justify-between">
+            <div className="bg-slate-900/80 backdrop-blur-xl border border-indigo-500/30 p-4 rounded-2xl flex items-center justify-between shadow-[0_0_30px_rgba(99,102,241,0.12)]">
               <div className="space-y-0.5">
-                <h3 className="text-xs font-bold text-white flex items-center gap-2">
-                  <Wrench size={14} className="text-emerald-400" /> Automated Code Repair
+                <h3 className="text-xs font-extrabold text-white flex items-center gap-2">
+                  <Wrench size={15} className="text-indigo-400 animate-bounce" /> Autonomous Code Repair Engine
                 </h3>
-                <p className="text-[11px] text-slate-400">Apply Gemini AI code patches to resolve identified vulnerabilities and risks.</p>
+                <p className="text-[11px] text-slate-400">Trigger Gemini AI terminal scripts to fix all identified vulnerabilities.</p>
               </div>
 
               <button
                 onClick={() => autoFixIssue('All Identified Vulnerabilities & Defects', 3)}
                 disabled={isFixing}
-                className="bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 text-white text-xs px-4 py-2 rounded-lg font-bold flex items-center gap-1.5 shadow transition-all hover:-translate-y-0.5 active:scale-95"
+                className="bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:from-slate-800 disabled:to-slate-800 text-white text-xs px-5 py-2.5 rounded-xl font-extrabold flex items-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all duration-300 hover:scale-105 active:scale-95"
               >
                 {isFixing ? (
-                  <><RefreshCw size={12} className="animate-spin" /> Repairing Codebase...</>
+                  <><RefreshCw size={14} className="animate-spin" /> Repairing Codebase...</>
                 ) : (
-                  <><Wrench size={12} /> Auto-Fix All Issues</>
+                  <><Wrench size={14} /> Auto-Fix All Issues</>
                 )}
               </button>
             </div>
 
             {/* Overview & Tech Stack */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 shadow-lg space-y-3 md:col-span-2">
+              <div className="bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 shadow-2xl space-y-3 md:col-span-2 glow-card-indigo">
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                  <Cpu size={15} className="text-emerald-400" /> Architecture Overview
+                  <Cpu size={15} className="text-indigo-400" /> Architecture Overview
                 </h3>
-                <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/80 p-4 rounded-lg border border-slate-800/80">
+                <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/80 p-4 rounded-xl border border-slate-800/80">
                   {result.architectureOverview}
                 </p>
                 <div className="flex flex-wrap gap-2 pt-1">
                   {result.techStack.map((tech, idx) => (
-                    <span key={idx} className="bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 text-[10px] px-2.5 py-1 rounded-full font-semibold font-mono">
+                    <span key={idx} className="bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 text-[10px] px-3 py-1 rounded-full font-semibold font-mono">
                       {tech}
                     </span>
                   ))}
@@ -441,23 +471,23 @@ export default function ProjectAnalyzer() {
               </div>
 
               {/* Security Audit Badge */}
-              <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 shadow-lg space-y-3">
+              <div className="bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 shadow-2xl space-y-3 glow-card-rose">
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
                   <ShieldAlert size={15} className={result.securityAudit.severity === 'High' ? 'text-rose-400' : 'text-amber-400'} /> Security Audit
                 </h3>
-                <div className="flex items-center justify-between bg-slate-950 p-3 rounded-lg border border-slate-800">
-                  <span className="text-xs text-slate-400 font-medium">Risk Severity:</span>
-                  <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${
+                <div className="flex items-center justify-between bg-slate-950 p-3 rounded-xl border border-slate-800">
+                  <span className="text-xs text-slate-400 font-medium">Risk Level:</span>
+                  <span className={`text-xs font-bold px-3 py-0.5 rounded-full border ${
                     result.securityAudit.severity === 'High' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
                     result.securityAudit.severity === 'Medium' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
                     'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                   }`}>
-                    {result.securityAudit.severity}
+                    {result.securityAudit.severity} Severity
                   </span>
                 </div>
                 <div className="space-y-1.5 font-mono text-[10px] text-slate-300">
                   {result.securityAudit.vulnerabilities.map((vuln, i) => (
-                    <div key={i} className="flex items-start gap-1.5 bg-slate-950/60 p-2 rounded border border-slate-800/60">
+                    <div key={i} className="flex items-start gap-1.5 bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/60">
                       <AlertTriangle size={12} className="text-amber-400 mt-0.5 shrink-0" />
                       <span>{vuln}</span>
                     </div>
@@ -467,21 +497,21 @@ export default function ProjectAnalyzer() {
             </div>
 
             {/* Bugs & Technical Risks Triage */}
-            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 shadow-lg space-y-4">
+            <div className="bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-5 shadow-2xl space-y-4">
               <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                <AlertTriangle size={15} className="text-rose-400" /> Diagnosed Risks & Direct Fixes
+                <AlertTriangle size={15} className="text-rose-400" /> Triage Defect Cards & Quick Repairs
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {result.bugsAndRisks.map((bug, i) => (
-                  <div key={i} className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 flex flex-col justify-between">
+                  <div key={i} className="bg-slate-950/90 p-4.5 rounded-2xl border border-slate-800 space-y-3 flex flex-col justify-between hover:border-slate-700 transition-all duration-300 hover:scale-[1.01]">
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                        <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
                           bug.tier === 3 ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
                           bug.tier === 2 ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
                           'bg-blue-500/10 text-blue-400 border-blue-500/20'
                         }`}>
-                          Tier {bug.tier} Risk
+                          Tier {bug.tier} Defect
                         </span>
                         <span className="font-mono text-[9px] text-slate-500">{bug.affectedFiles.join(', ')}</span>
                       </div>
@@ -489,16 +519,16 @@ export default function ProjectAnalyzer() {
                       <p className="text-[11px] text-slate-400 leading-relaxed">{bug.description}</p>
                     </div>
 
-                    <div className="pt-2 border-t border-slate-900 flex items-center justify-between">
-                      <span className="text-[10px] text-indigo-300 font-mono flex items-center gap-1">
-                        <Zap size={11} className="text-indigo-400" /> Fix: {bug.fixRecommendation.slice(0, 45)}...
+                    <div className="pt-2 border-t border-slate-900 flex items-center justify-between gap-2">
+                      <span className="text-[10px] text-indigo-300 font-mono flex items-center gap-1 truncate">
+                        <Zap size={11} className="text-indigo-400 shrink-0" /> {bug.fixRecommendation.slice(0, 40)}...
                       </span>
                       <button
                         onClick={() => autoFixIssue(bug.title, bug.tier, bug.affectedFiles)}
                         disabled={isFixing}
-                        className="text-[10px] bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white px-2.5 py-1 rounded font-semibold border border-slate-700 hover:border-emerald-500 transition-colors flex items-center gap-1 shrink-0"
+                        className="text-[10px] bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white px-3 py-1.5 rounded-lg font-bold border border-slate-700 hover:border-emerald-500 transition-all duration-200 flex items-center gap-1.5 shrink-0 shadow-md"
                       >
-                        <Wrench size={10} /> Fix Issue
+                        <Wrench size={11} /> Fix Issue
                       </button>
                     </div>
                   </div>

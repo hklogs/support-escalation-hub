@@ -1,6 +1,62 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Source Code Pro", ui-monospace, SFMono-Regular, monospace;
+  --font-sans: "Inter", "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Fira Code", "Source Code Pro", ui-monospace, SFMono-Regular, monospace;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes float3D {
+  0%, 100% { transform: translateY(0px) rotateX(2deg) rotateY(-2deg); }
+  50% { transform: translateY(-8px) rotateX(-2deg) rotateY(2deg); }
+}
+
+@keyframes cyberGrid {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 40px; }
+}
+
+.animate-scanline {
+  animation: scanline 2.5s linear infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+.animate-float-3d {
+  animation: float3D 6s ease-in-out infinite;
+}
+
+.cyber-grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(99, 102, 241, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  animation: cyberGrid 20s linear infinite;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.glow-card-indigo {
+  box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.15), 0 0 10px -5px rgba(99, 102, 241, 0.1);
+}
+
+.glow-card-emerald {
+  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.15), 0 0 10px -5px rgba(16, 185, 129, 0.1);
+}
+
+.glow-card-rose {
+  box-shadow: 0 0 25px -5px rgba(244, 63, 94, 0.15), 0 0 10px -5px rgba(244, 63, 94, 0.1);
 }
